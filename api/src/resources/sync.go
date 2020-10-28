@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func sync(w http.ResponseWriter, r *http.Request) {
+func Sync(w http.ResponseWriter, r *http.Request) {
 
 }
 

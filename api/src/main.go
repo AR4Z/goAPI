@@ -1,15 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/rs/cors"
+
+	"./manager"
+	"./resources"
 )
 
 func main() {
-	port := "3333"
+	dg := manager.DgraphClient()
+	manager.Setup(dg)
 
 	// router setup
 	router := chi.NewRouter()
@@ -17,8 +21,11 @@ func main() {
 	router.Use(middleware.Recoverer)
 
 	// resources routes
-	router.Get("/sync", resources.sync)
-	router.Get("/buyers", resources.buyersCollection)
-	router.Get("/buyers/{buyerId}", resources.buyersDetail)
+	router.Get("/sync", resources.Sync)
+	router.Get("/buyers", resources.BuyersCollection)
+	router.Get("/buyers/{buyerId}", resources.BuyersDetail)
 
+	httpHandler := cors.Default().Handler(router)
+
+	http.ListenAndServe(":3333", httpHandler)
 }
